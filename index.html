@@ -8,24 +8,52 @@
   <style>
     img {
       box-shadow: 2px 2px 7px 0px rgba(0,0,0,0.75);
+      border-radius: 10%;
     }
+
   </style>
 </head>
 <body>
   <div class="container">
 
-    <h1 class="text-center">Pokemon</h1>  
-    
-    <div id="pokemones" class="row"></div>
+    <h1 class="text-center pt-4 text-danger">Pokemon</h1> <br> 
+    <div class="row">
+      <div class="col-9">
+
+        <div id="pokemones" class="row"></div>
+      </div>
+      <div id="pokedex" class="col-3"></div>
+
+    </div>
+
   </div>
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script>
     $(document).ready(function () {
-      for (var i= 1; i <= 151; i++) {
-        $("#pokemones").append('<div class="col-2"><img class="m-2" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'+i+'.png"></div>');
+      for (var i= 1; i <= 150; i++) {
+        $("#pokemones").append('<div class="col-2"><img class="m-1" id="'+i+'" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'+i+'.png"></div>');
       }
+
+      $('img').on('click', function () {
+        var id= $(this).attr("id");
+        $.get("http://pokeapi.co/api/v2/pokemon/"+id, function(datos){
+          console.log(datos);
+          var lista = "<ul>"
+          for (var i = 0; i < datos.types.length; i++){
+            lista += "<li>" + datos.types[i].type.name + "</li>";
+          }
+          lista += "</ul>";
+          $("#pokedex").html(`
+            <h2>Nombre: ${datos.name}</h2>
+            <h4>Peso: ${datos.weight}</h4>
+            <h4>Estatura: ${datos.height}</h4>
+            <h4>Tipo: </h4>
+          ` + lista)
+        })
+      });     
+
     })
   </script>
 </body>
